@@ -1,0 +1,7 @@
+vote.tierwahl:
+  path: '/vote/tierwahl'
+  defaults:
+    _form:  '\Drupal\vote\Form\Miau'
+    _title: 'Tierwahl'
+  requirements:
+    _permission: 'access content'

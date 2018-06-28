@@ -1,0 +1,5 @@
+name: Vote Modul
+type: module
+description: Modul für die Wahl des tollsten tieres
+package: OnlineTeam Modules
+core: 8.x

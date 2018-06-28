@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the dbtng_example module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Creates some default entries on this module custom table.
+ *
+ * @see hook_install()
+ *
+ * @ingroup dbtng_example
+ */
+function vote_install() {
+    // Add a default entry.
+    $fields = [
+      'vote' => 'John',
+
+    ];
+    db_insert('votedb')
+      ->fields($fields)
+      ->execute();
+
+    // Add another entry.
+    $fields = [
+      'vote' => 'Olaf',
+      'uid' => 1,
+    ];
+    db_insert('votedb')
+      ->fields($fields)
+      ->execute();
+
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database tables used by this module.
+ *
+ * @see hook_schema()
+ *
+ * @ingroup dbtng_example
+ */
+function vote_schema() {
+  $schema['votedb'] = [
+    'description' => 'Stores example person entries for demonstration purposes.',
+    'fields' => [
+      'pid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Creator user's {users}.uid",
+      ],
+      'vote' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Vote of the person.',
+      ],
+    ],
+    'primary key' => ['pid'],
+    'indexes' => [
+      'vote' => ['vote'],
+
+    ],
+  ];
+
+  return $schema;
+}
