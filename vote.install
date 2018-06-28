@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the dbtng_example module.
+ * Install, update and uninstall functions for the vote module.
  */
 
 /**
@@ -12,7 +12,7 @@
  *
  * @see hook_install()
  *
- * @ingroup dbtng_example
+ * @ingroup votedb
  */
 function vote_install() {
     // Add a default entry.
@@ -42,7 +42,7 @@ function vote_install() {
  *
  * @see hook_schema()
  *
- * @ingroup dbtng_example
+ * @ingroup votedb
  */
 function vote_schema() {
   $schema['votedb'] = [

@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Form\FormBase
  * @see \Drupal\Core\Form\ConfigFormBase
  */
-class Miau extends FormBase implements FormInterface, ContainerInjectionInterface{
+class Miau implements FormInterface, ContainerInjectionInterface{
 
   use StringTranslationTrait;
   use MessengerTrait;
@@ -64,41 +64,33 @@ class Miau extends FormBase implements FormInterface, ContainerInjectionInterfac
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+  $form = [];
 
-    $form['description'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Wähle dein Lieblingstier.'),
-    ];
+     $form['message'] = [
+       '#markup' => $this->t('Add an entry to the dbtng_example table.'),
+     ];
 
-    $form['favorite'] = [
-          '#type' => 'select',
-          '#title' => $this->t('Favorite color'),
-          '#options' => [
-            'cat' => $this->t('Katze'),
-            'dog' => $this->t('Hund'),
-            'duck' => $this->t('Ente'),
-          ],
-          '#empty_option' => $this->t('-select-'),
-        ];
+     $form['vote'] = [
+       '#type' => 'fieldset',
+       '#title' => $this->t('Vote'),
+     ];
+     $form['vote']['votes'] = [
+             '#type' => 'select',
+             '#title' => $this->t('Favorite color'),
+             '#options' => [
+               'cat' => $this->t('Katze'),
+               'dog' => $this->t('Hund'),
+               'duck' => $this->t('Ente'),
+             ],
+             '#empty_option' => $this->t('-select-'),
+           ];
+     $form['vote']['submit'] = [
+       '#type' => 'submit',
+       '#value' => $this->t('Vote'),
+     ];
 
-    $form['actions'] = [
-      '#type' => 'actions',
-    ];
-
-    // Add a submit button that handles the submission of the form.
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Submit'),
-    ];
-
-
-    $form['messages'] = [
-      '#type' => 'container',
-      '#attributes' => ['id' => 'message-wrapper'],
-    ];
-
-    return $form;
-  }
+     return $form;
+   }
 
   /**
    * {@inheritdoc}
@@ -129,19 +121,17 @@ class Miau extends FormBase implements FormInterface, ContainerInjectionInterfac
 
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-   // Gather the current user so the new record has ownership.
-      $account = $this->currentUser;
-      // Save the submitted entry.
-      $entry = [
-        'vote' => $form_state->getValue('favorite'),
-        'uid' => $account->id(),
-      ];
-      $return = voteStorage::insert($entry);
-      if ($return) {
-        $this->messenger()->addMessage($this->t('Created entry @entry', ['@entry' => print_r($entry, TRUE)]));
-      }
-
+    // Gather the current user so the new record has ownership.
+    $account = $this->currentUser;
+    // Save the submitted entry.
+    $entry = [
+      'vote' => $form_state->getValue('votes'),
+      'uid' => $account->id(),
+    ];
+    $return = voteStorage::insert($entry);
+    if ($return) {
+      $this->messenger()->addMessage($this->t('Created entry @entry', ['@entry' => print_r($entry, TRUE)]));
+    }
   }
 
 }
